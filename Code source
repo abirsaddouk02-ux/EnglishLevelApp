@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test d'Anglais</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #f9f7f5;
+            --text: #2c2c2c;
+            --border: #e0dcd8;
+            --accent: #4a7c7e;
+            --accent-light: #7aa7a9;
+            --error: #c84d3a;
+            --success: #5a8f67;
+            --input-bg: #fff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .mode-toggle {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .mode-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--border);
+            background: var(--input-bg);
+            color: var(--text);
+            cursor: pointer;
+            font-size: 1rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .mode-btn:hover:not(.active) {
+            border-color: var(--accent);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 1rem;
+            background: var(--input-bg);
+            color: var(--text);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(74, 124, 126, 0.1);
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: var(--accent-light);
+        }
+
+        button.secondary {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        button.secondary:hover {
+            background: #d4d0cc;
+        }
+
+        button.danger {
+            background: var(--error);
+        }
+
+        button.danger:hover {
+            background: #b0412f;
+        }
+
+        .question-card {
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 4px;
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .question-type {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 3px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .actions button {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 2rem 0 1.5rem 0;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin: 1rem 0;
+        }
+
+        .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            cursor: pointer;
+        }
+
+        .audio-player {
+            margin: 1rem 0;
+            background: rgba(74, 124, 126, 0.05);
+            padding: 1rem;
+            border-radius: 4px;
+        }
+
+        audio {
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-display {
+            background: var(--input-bg);
+            border: 2px solid var(--border);
+            padding: 2rem;
+            border-radius: 4px;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .score-display h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .level-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .message.success {
+            background: rgba(90, 143, 103, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(90, 143, 103, 0.2);
+        }
+
+        .message.error {
+            background: rgba(200, 77, 58, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(200, 77, 58, 0.2);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: #999;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .password-protect {
+            background: rgba(200, 77, 58, 0.05);
+            border: 1px solid rgba(200, 77, 58, 0.2);
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+        }
+
+        .fill-blank {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .fill-blank input {
+            max-width: 300px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .mode-toggle {
+                flex-direction: column;
+            }
+
+            .mode-btn {
+                width: 100%;
+            }
+
+            .question-header {
+                flex-direction: column;
+            }
+
+            .actions {
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Test d'anglais</h1>
+            <div class="mode-toggle">
+                <button class="mode-btn active" onclick="switchMode('user')">Passer le test</button>
+                <button class="mode-btn" onclick="switchMode('admin')">Admin</button>
+            </div>
+        </header>
+
+        <!-- MODE UTILISATEUR -->
+        <div id="user-section" class="section active">
+            <div id="user-content"></div>
+        </div>
+
+        <!-- MODE ADMIN -->
+        <div id="admin-section" class="section">
+            <div class="password-protect">
+                <div class="form-group">
+                    <label>Mot de passe admin</label>
+                    <input type="password" id="adminPassword" placeholder="Entrez le mot de passe">
+                    <small style="color: #999; display: block; margin-top: 0.5rem;">Défaut: "admin123" (à changer absolument en production)</small>
+                </div>
+                <button onclick="checkAdminPassword()">Accéder à l'admin</button>
+            </div>
+            <div id="admin-panel" style="display: none;">
+                <div class="form-group">
+                    <label>Endpoint Formspree</label>
+                    <input type="text" id="formspreeEndpoint" placeholder="https://formspree.io/f/...">
+                    <small style="color: #999; display: block; margin-top: 0.5rem;">Récupérez cette URL sur Formspree après avoir créé un formulaire</small>
+                </div>
+                <button onclick="saveFormspreeEndpoint()">Enregistrer l'endpoint</button>
+
+                <div style="margin-top: 3rem;">
+                    <h2 style="font-size: 1.3rem; margin-bottom: 1.5rem;">Ajouter une question</h2>
+                    
+                    <div class="form-group">
+                        <label>Type de question</label>
+                        <select id="questionType" onchange="updateQuestionForm()">
+                            <option value="mcq">QCM (Choix multiples)</option>
+                            <option value="fill">Exercice à trous</option>
+                            <option value="writing">Rédaction</option>
+                            <option value="listening">Compréhension orale</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Catégorie</label>
+                        <select id="questionCategory">
+                            <option value="reading">Compréhension écrite</option>
+                            <option value="listening">Compréhension orale</option>
+                            <option value="writing">Expression écrite</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Énoncé de la question</label>
+                        <textarea id="questionText" placeholder="Écrivez la question..."></textarea>
+                    </div>
+
+                    <div id="mcq-options" style="display: block;">
+                        <div class="form-group">
+                            <label>Option 1</label>
+                            <input type="text" id="option1" placeholder="Réponse 1">
+                        </div>
+                        <div class="form-group">
+                            <label>Option 2</label>
+                            <input type="text" id="option2" placeholder="Réponse 2">
+                        </div>
+                        <div class="form-group">
+                            <label>Option 3</label>
+                            <input type="text" id="option3" placeholder="Réponse 3">
+                        </div>
+                        <div class="form-group">
+                            <label>Option 4</label>
+                            <input type="text" id="option4" placeholder="Réponse 4">
+                        </div>
+                        <div class="form-group">
+                            <label>Bonne réponse (numéro: 1, 2, 3 ou 4)</label>
+                            <input type="number" id="correctAnswer" min="1" max="4" placeholder="1">
+                        </div>
+                    </div>
+
+                    <div id="fill-options" style="display: none;">
+                        <div class="form-group">
+                            <label>Texte avec blancs (utilisez [___] pour les blancs)</label>
+                            <textarea id="fillText" placeholder="The capital of France is [___]."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Réponses (séparées par des virgules)</label>
+                            <input type="text" id="fillAnswers" placeholder="Paris, paris, PARIS">
+                        </div>
+                    </div>
+
+                    <div id="writing-options" style="display: none;">
+                        <div class="form-group">
+                            <label>Instructions pour la rédaction</label>
+                            <textarea id="writingInstructions" placeholder="Rédigez un texte de 150-200 mots sur..."></textarea>
+                        </div>
+                    </div>
+
+                    <div id="listening-options" style="display: none;">
+                        <div class="form-group">
+                            <label>Fichier audio</label>
+                            <input type="file" id="audioFile" accept="audio/*">
+                            <small style="color: #999; display: block; margin-top: 0.5rem;">Formats supportés: MP3, WAV, OGG</small>
+                        </div>
+                    </div>
+
+                    <button onclick="addQuestion()" style="margin-top: 1rem;">Ajouter la question</button>
+                </div>
+
+                <div style="margin-top: 3rem;">
+                    <h2 style="font-size: 1.3rem; margin-bottom: 1.5rem;">Questions créées</h2>
+                    <div id="questions-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ADMIN_PASSWORD = "admin123";
+        const STORAGE_KEY = "english_test_data";
+        const FORMSPREE_KEY = "formspree_endpoint";
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            renderUserContent();
+            loadQuestions();
+        });
+
+        function switchMode(mode) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            
+            if (mode === 'user') {
+                document.getElementById('user-section').classList.add('active');
+                document.querySelectorAll('.mode-btn')[0].classList.add('active');
+                renderUserContent();
+            } else {
+                document.getElementById('admin-section').classList.add('active');
+                document.querySelectorAll('.mode-btn')[1].classList.add('active');
+            }
+        }
+
+        function checkAdminPassword() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('admin-panel').style.display = 'block';
+                document.querySelector('.password-protect').style.display = 'none';
+                loadQuestions();
+            } else {
+                alert('Mot de passe incorrect');
+            }
+        }
+
+        function saveFormspreeEndpoint() {
+            const endpoint = document.getElementById('formspreeEndpoint').value.trim();
+            if (!endpoint) {
+                alert('Veuillez entrer un endpoint');
+                return;
+            }
+            localStorage.setItem(FORMSPREE_KEY, endpoint);
+            alert('Endpoint enregistré');
+        }
+
+        function updateQuestionForm() {
+            const type = document.getElementById('questionType').value;
+            document.getElementById('mcq-options').style.display = type === 'mcq' ? 'block' : 'none';
+            document.getElementById('fill-options').style.display = type === 'fill' ? 'block' : 'none';
+            document.getElementById('writing-options').style.display = type === 'writing' ? 'block' : 'none';
+            document.getElementById('listening-options').style.display = type === 'listening' ? 'block' : 'none';
+        }
+
+        function addQuestion() {
+            const type = document.getElementById('questionType').value;
+            const category = document.getElementById('questionCategory').value;
+            const text = document.getElementById('questionText').value.trim();
+
+            if (!text) {
+                alert('Veuillez entrer l\'énoncé de la question');
+                return;
+            }
+
+            let question = {
+                id: Date.now(),
+                type,
+                category,
+                text
+            };
+
+            if (type === 'mcq') {
+                const options = [
+                    document.getElementById('option1').value,
+                    document.getElementById('option2').value,
+                    document.getElementById('option3').value,
+                    document.getElementById('option4').value
+                ];
+
+                if (options.some(o => !o.trim())) {
+                    alert('Veuillez remplir toutes les options');
+                    return;
+                }
+
+                const correctAnswer = parseInt(document.getElementById('correctAnswer').value) - 1;
+                if (isNaN(correctAnswer) || correctAnswer < 0 || correctAnswer > 3) {
+                    alert('Veuillez sélectionner une bonne réponse valide');
+                    return;
+                }
+
+                question.options = options;
+                question.correctAnswer = correctAnswer;
+            }
+
+            if (type === 'fill') {
+                const fillText = document.getElementById('fillText').value.trim();
+                const fillAnswers = document.getElementById('fillAnswers').value.trim().split(',').map(a => a.trim());
+
+                if (!fillText || fillAnswers.length === 0) {
+                    alert('Veuillez remplir le texte et les réponses');
+                    return;
+                }
+
+                question.fillText = fillText;
+                question.fillAnswers = fillAnswers;
+            }
+
+            if (type === 'writing') {
+                const instructions = document.getElementById('writingInstructions').value.trim();
+                if (!instructions) {
+                    alert('Veuillez entrer les instructions');
+                    return;
+                }
+                question.instructions = instructions;
+            }
+
+            if (type === 'listening') {
+                const audioFile = document.getElementById('audioFile').files[0];
+                if (!audioFile) {
+                    alert('Veuillez sélectionner un fichier audio');
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    question.audio = e.target.result;
+                    saveQuestion(question);
+                };
+                reader.readAsDataURL(audioFile);
+                return;
+            }
+
+            saveQuestion(question);
+        }
+
+        function saveQuestion(question) {
+            let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            data.push(question);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            
+            // Réinitialiser le formulaire
+            document.getElementById('questionText').value = '';
+            document.getElementById('option1').value = '';
+            document.getElementById('option2').value = '';
+            document.getElementById('option3').value = '';
+            document.getElementById('option4').value = '';
+            document.getElementById('correctAnswer').value = '';
+            document.getElementById('fillText').value = '';
+            document.getElementById('fillAnswers').value = '';
+            document.getElementById('writingInstructions').value = '';
+            document.getElementById('audioFile').value = '';
+            document.getElementById('audioFile').files;
+            
+            alert('Question ajoutée');
+            loadQuestions();
+        }
+
+        function loadQuestions() {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            const list = document.getElementById('questions-list');
+            
+            if (data.length === 0) {
+                list.innerHTML = '<div class="empty-state"><p>Aucune question créée</p></div>';
+                return;
+            }
+
+            list.innerHTML = data.map(q => `
+                <div class="question-card">
+                    <div class="question-header">
+                        <div>
+                            <span class="question-type">${getTypeLabel(q.type)}</span>
+                            <span style="margin-left: 0.5rem; color: #999; font-size: 0.9rem;">${getCategoryLabel(q.category)}</span>
+                        </div>
+                        <div class="actions">
+                            <button class="danger" onclick="deleteQuestion(${q.id})">Supprimer</button>
+                        </div>
+                    </div>
+                    <p><strong>${q.text}</strong></p>
+                </div>
+            `).join('');
+        }
+
+        function deleteQuestion(id) {
+            if (confirm('Supprimer cette question ?')) {
+                let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                data = data.filter(q => q.id !== id);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+                loadQuestions();
+            }
+        }
+
+        function getTypeLabel(type) {
+            const labels = {
+                mcq: 'QCM',
+                fill: 'À trous',
+                writing: 'Rédaction',
+                listening: 'Compréhension orale'
+            };
+            return labels[type] || type;
+        }
+
+        function getCategoryLabel(category) {
+            const labels = {
+                reading: 'Compréhension écrite',
+                listening: 'Compréhension orale',
+                writing: 'Expression écrite'
+            };
+            return labels[category] || category;
+        }
+
+        function renderUserContent() {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            const content = document.getElementById('user-content');
+
+            if (data.length === 0) {
+                content.innerHTML = '<div class="empty-state"><p>Aucun test disponible pour le moment</p></div>';
+                return;
+            }
+
+            const grouped = {
+                reading: data.filter(q => q.category === 'reading'),
+                listening: data.filter(q => q.category === 'listening'),
+                writing: data.filter(q => q.category === 'writing')
+            };
+
+            let html = '<form id="testForm">';
+            
+            // Infos utilisateur
+            html += `
+                <div class="question-card">
+                    <h3 style="margin-bottom: 1rem;">Informations</h3>
+                    <div class="form-group">
+                        <label>Nom et prénom</label>
+                        <input type="text" id="userName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="userEmail" required>
+                    </div>
+                </div>
+            `;
+
+            // Compréhension écrite
+            if (grouped.reading.length > 0) {
+                html += '<div class="section-title">Compréhension écrite</div>';
+                grouped.reading.forEach((q, idx) => {
+                    html += renderQuestion(q, 'reading', idx);
+                });
+            }
+
+            // Compréhension orale
+            if (grouped.listening.length > 0) {
+                html += '<div class="section-title">Compréhension orale</div>';
+                grouped.listening.forEach((q, idx) => {
+                    html += renderQuestion(q, 'listening', idx);
+                });
+            }
+
+            // Expression écrite
+            if (grouped.writing.length > 0) {
+                html += '<div class="section-title">Expression écrite</div>';
+                grouped.writing.forEach((q, idx) => {
+                    html += renderQuestion(q, 'writing', idx);
+                });
+            }
+
+            html += '<button type="button" onclick="submitTest()" style="margin-top: 2rem; width: 100%; padding: 1rem;">Soumettre mes réponses</button>';
+            html += '</form>';
+
+            content.innerHTML = html;
+        }
+
+        function renderQuestion(q, category, idx) {
+            let html = `<div class="question-card">`;
+            html += `<p><strong>Question ${idx + 1}: ${q.text}</strong></p>`;
+
+            if (q.type === 'mcq') {
+                html += '<div class="options">';
+                q.options.forEach((opt, i) => {
+                    html += `
+                        <div class="radio-group">
+                            <input type="radio" name="q${q.id}" value="${i}" id="q${q.id}_${i}">
+                            <label for="q${q.id}_${i}">${opt}</label>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+
+            if (q.type === 'listening') {
+                if (q.audio) {
+                    html += `
+                        <div class="audio-player">
+                            <audio controls>
+                                <source src="${q.audio}" type="audio/mpeg">
+                                Votre navigateur ne supporte pas la lecture audio.
+                            </audio>
+                        </div>
+                    `;
+                }
+                html += `<textarea placeholder="Écrivez ce que vous avez entendu..." id="q${q.id}" class="question-response" required></textarea>`;
+            }
+
+            if (q.type === 'fill') {
+                const textWithInput = q.fillText.replace(/\[___\]/g, (match, offset) => {
+                    const blankIndex = q.fillText.substring(0, offset).split(/\[___\]/g).length - 1;
+                    return `<input type="text" id="q${q.id}_blank${blankIndex}" class="fill-input" style="max-width: 200px;">`;
+                });
+                html += `<div style="line-height: 2;">${textWithInput}</div>`;
+            }
+
+            if (q.type === 'writing') {
+                html += `<p style="color: #666; font-size: 0.95rem; margin: 1rem 0;">${q.instructions}</p>`;
+                html += `<textarea placeholder="Écrivez votre réponse..." id="q${q.id}" class="question-response" required></textarea>`;
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        function submitTest() {
+            const formspreeEndpoint = localStorage.getItem(FORMSPREE_KEY);
+            if (!formspreeEndpoint) {
+                alert('Configuration incomplete: endpoint Formspree manquant');
+                return;
+            }
+
+            const userName = document.getElementById('userName').value.trim();
+            const userEmail = document.getElementById('userEmail').value.trim();
+
+            if (!userName || !userEmail) {
+                alert('Veuillez remplir vos informations');
+                return;
+            }
+
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            const answers = collectAnswers(data);
+            const score = calculateScore(data, answers);
+
+            // Préparer les données pour Formspree
+            const formData = new FormData();
+            formData.append('name', userName);
+            formData.append('email', userEmail);
+            formData.append('score_percentage', Math.round(score.percentage));
+            formData.append('cefr_level', score.cefr);
+            formData.append('answers_json', JSON.stringify(answers, null, 2));
+
+            // Envoyer à Formspree
+            fetch(formspreeEndpoint, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    showResults(score);
+                } else {
+                    throw new Error('Erreur lors de l\'envoi');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert('Erreur lors de l\'envoi. Vérifiez votre configuration Formspree.');
+            });
+        }
+
+        function collectAnswers(questions) {
+            const answers = {};
+            
+            questions.forEach(q => {
+                if (q.type === 'mcq') {
+                    const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                    answers[q.id] = {
+                        type: q.type,
+                        question: q.text,
+                        userAnswer: selected ? q.options[selected.value] : 'Pas de réponse'
+                    };
+                } else if (q.type === 'listening' || q.type === 'writing') {
+                    answers[q.id] = {
+                        type: q.type,
+                        question: q.text,
+                        userAnswer: document.getElementById(`q${q.id}`)?.value || 'Pas de réponse'
+                    };
+                } else if (q.type === 'fill') {
+                    const blanks = [];
+                    let i = 0;
+                    while (document.getElementById(`q${q.id}_blank${i}`)) {
+                        blanks.push(document.getElementById(`q${q.id}_blank${i}`).value);
+                        i++;
+                    }
+                    answers[q.id] = {
+                        type: q.type,
+                        question: q.text,
+                        userAnswers: blanks,
+                        correctAnswers: q.fillAnswers
+                    };
+                }
+            });
+
+            return answers;
+        }
+
+        function calculateScore(questions, answers) {
+            let correct = 0;
+            let total = 0;
+
+            questions.forEach(q => {
+                if (q.type === 'mcq') {
+                    total++;
+                    const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                    if (selected && parseInt(selected.value) === q.correctAnswer) {
+                        correct++;
+                    }
+                } else if (q.type === 'fill') {
+                    const blanks = [];
+                    let i = 0;
+                    while (document.getElementById(`q${q.id}_blank${i}`)) {
+                        blanks.push(document.getElementById(`q${q.id}_blank${i}`).value.toLowerCase().trim());
+                        i++;
+                    }
+                    blanks.forEach((blank, idx) => {
+                        total++;
+                        if (q.fillAnswers[idx] && q.fillAnswers[idx].toLowerCase().trim() === blank) {
+                            correct++;
+                        }
+                    });
+                }
+                // Les questions de rédaction et compréhension orale ne sont pas notées auto
+            });
+
+            const percentage = total > 0 ? (correct / total) * 100 : 0;
+            const cefr = getCEFRLevel(percentage);
+
+            return { correct, total, percentage, cefr };
+        }
+
+        function getCEFRLevel(percentage) {
+            if (percentage >= 90) return 'C2';
+            if (percentage >= 80) return 'C1';
+            if (percentage >= 70) return 'B2';
+            if (percentage >= 60) return 'B1';
+            if (percentage >= 50) return 'A2';
+            return 'A1';
+        }
+
+        function showResults(score) {
+            const content = document.getElementById('user-content');
+            content.innerHTML = `
+                <div class="score-display">
+                    <h2>Résultats de votre test</h2>
+                    <p>Score: ${score.correct} / ${score.total} (${Math.round(score.percentage)}%)</p>
+                    <div class="level-badge">${score.cefr}</div>
+                    <p style="margin-top: 2rem; color: #666;">Vos réponses ont été envoyées. Nous vous contacterons bientôt avec vos résultats détaillés.</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
