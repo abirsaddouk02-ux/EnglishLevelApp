@@ -445,12 +445,12 @@
         const STORAGE_KEY = "english_test_data";
         const FORMSPREE_KEY = "formspree_endpoint";
 
-        // Initialisation
+       // Initialisation
         document.addEventListener('DOMContentLoaded', () => {
             renderUserContent();
             loadQuestions();
-        });
-
+            updateMcqOptions(); // Ajouter cette ligne
+    });
         function switchMode(mode) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
