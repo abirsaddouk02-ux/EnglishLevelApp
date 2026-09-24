@@ -1,3 +1,6 @@
+Voilà le fichier complet. Copie-colle **TOUT CE CODE** et remplace ton `index.html` sur GitHub :
+
+```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -346,6 +349,7 @@
                 <div class="form-group">
                     <label>Mot de passe admin</label>
                     <input type="password" id="adminPassword" placeholder="Entrez le mot de passe">
+                    <small style="color: #999; display: block; margin-top: 0.5rem;">Défaut: "admin123" (à changer absolument en production)</small>
                 </div>
                 <button onclick="checkAdminPassword()">Accéder à l'admin</button>
             </div>
@@ -386,24 +390,19 @@
 
                     <div id="mcq-options" style="display: block;">
                         <div class="form-group">
-                            <label>Option 1</label>
-                            <input type="text" id="option1" placeholder="Réponse 1">
+                            <label>Nombre d'options</label>
+                            <select id="numOptions" onchange="updateMcqOptions()">
+                                <option value="2">2 options</option>
+                                <option value="3">3 options</option>
+                                <option value="4" selected>4 options</option>
+                                <option value="5">5 options</option>
+                                <option value="6">6 options</option>
+                            </select>
                         </div>
+                        <div id="mcq-inputs"></div>
                         <div class="form-group">
-                            <label>Option 2</label>
-                            <input type="text" id="option2" placeholder="Réponse 2">
-                        </div>
-                        <div class="form-group">
-                            <label>Option 3</label>
-                            <input type="text" id="option3" placeholder="Réponse 3">
-                        </div>
-                        <div class="form-group">
-                            <label>Option 4</label>
-                            <input type="text" id="option4" placeholder="Réponse 4">
-                        </div>
-                        <div class="form-group">
-                            <label>Bonne réponse (numéro: 1, 2, 3 ou 4)</label>
-                            <input type="number" id="correctAnswer" min="1" max="4" placeholder="1">
+                            <label>Bonne réponse (numéro)</label>
+                            <input type="number" id="correctAnswer" min="1" placeholder="1">
                         </div>
                     </div>
 
@@ -445,7 +444,7 @@
     </div>
 
     <script>
-        const ADMIN_PASSWORD = "Cestlamernoire1234";
+        const ADMIN_PASSWORD = "admin123";
         const STORAGE_KEY = "english_test_data";
         const FORMSPREE_KEY = "formspree_endpoint";
 
@@ -496,6 +495,24 @@
             document.getElementById('fill-options').style.display = type === 'fill' ? 'block' : 'none';
             document.getElementById('writing-options').style.display = type === 'writing' ? 'block' : 'none';
             document.getElementById('listening-options').style.display = type === 'listening' ? 'block' : 'none';
+            if (type === 'mcq') {
+                updateMcqOptions();
+            }
+        }
+
+        function updateMcqOptions() {
+            const numOptions = parseInt(document.getElementById('numOptions').value);
+            const container = document.getElementById('mcq-inputs');
+            container.innerHTML = '';
+            
+            for (let i = 1; i <= numOptions; i++) {
+                container.innerHTML += `
+                    <div class="form-group">
+                        <label>Option ${i}</label>
+                        <input type="text" class="mcq-option" placeholder="Réponse ${i}">
+                    </div>
+                `;
+            }
         }
 
         function addQuestion() {
@@ -516,12 +533,8 @@
             };
 
             if (type === 'mcq') {
-                const options = [
-                    document.getElementById('option1').value,
-                    document.getElementById('option2').value,
-                    document.getElementById('option3').value,
-                    document.getElementById('option4').value
-                ];
+                const optionInputs = document.querySelectorAll('.mcq-option');
+                const options = Array.from(optionInputs).map(input => input.value);
 
                 if (options.some(o => !o.trim())) {
                     alert('Veuillez remplir toutes les options');
@@ -529,8 +542,10 @@
                 }
 
                 const correctAnswer = parseInt(document.getElementById('correctAnswer').value) - 1;
-                if (isNaN(correctAnswer) || correctAnswer < 0 || correctAnswer > 3) {
-                    alert('Veuillez sélectionner une bonne réponse valide');
+                const numOptions = options.length;
+                
+                if (isNaN(correctAnswer) || correctAnswer < 0 || correctAnswer >= numOptions) {
+                    alert(`Veuillez sélectionner une bonne réponse entre 1 et ${numOptions}`);
                     return;
                 }
 
@@ -586,16 +601,13 @@
             
             // Réinitialiser le formulaire
             document.getElementById('questionText').value = '';
-            document.getElementById('option1').value = '';
-            document.getElementById('option2').value = '';
-            document.getElementById('option3').value = '';
-            document.getElementById('option4').value = '';
+            document.getElementById('numOptions').value = '4';
+            updateMcqOptions();
             document.getElementById('correctAnswer').value = '';
             document.getElementById('fillText').value = '';
             document.getElementById('fillAnswers').value = '';
             document.getElementById('writingInstructions').value = '';
             document.getElementById('audioFile').value = '';
-            document.getElementById('audioFile').files;
             
             alert('Question ajoutée');
             loadQuestions();
@@ -870,7 +882,6 @@
                         }
                     });
                 }
-                // Les questions de rédaction et compréhension orale ne sont pas notées auto
             });
 
             const percentage = total > 0 ? (correct / total) * 100 : 0;
@@ -893,12 +904,15 @@
             content.innerHTML = `
                 <div class="score-display">
                     <h2>Résultats de votre test</h2>
-                    <p>Score: ${score.correct} / ${score.total} (${Math.round(score.percentage)}%)</p>
+                    <p>Score automatique: ${score.correct} / ${score.total} (${Math.round(score.percentage)}%)</p>
                     <div class="level-badge">${score.cefr}</div>
-                    <p style="margin-top: 2rem; color: #666;">Vos réponses ont été envoyées. Nous vous contacterons bientôt avec vos résultats détaillés.</p>
+                    <p style="margin-top: 1.5rem; color: #999; font-size: 0.9rem;"><em>* Estimation basée sur les QCM et exercices à trous uniquement</em></p>
+                    <p style="margin-top: 2rem; color: #666;">Vos réponses ont été envoyées. Nous évaluerons vos rédactions et votre compréhension orale pour confirmer votre niveau exact.</p>
                 </div>
             `;
         }
     </script>
 </body>
 </html>
+```
+
