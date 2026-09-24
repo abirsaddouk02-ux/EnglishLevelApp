@@ -846,9 +846,9 @@
             }
 
             if (q.type === 'fill') {
-                const textWithInput = q.fillText.replace(/\[___\]/g, (match, offset) => {
-                    const blankIndex = q.fillText.substring(0, offset).split(/\[___\]/g).length - 1;
-                    return `<input type="text" id="q${q.id}_blank${blankIndex}" class="fill-input" style="max-width: 200px;">`;
+                let blankCount = 0;
+                const textWithInput = q.fillText.replace(/\[___\]/g, () => {
+                    return `<input type="text" id="q${q.id}_blank${blankCount++}" class="fill-input" style="max-width: 200px;">`;
                 });
                 html += `<div style="line-height: 2;">${textWithInput}</div>`;
             }
